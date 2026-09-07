@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>【新郎姓名】❤️【新娘姓名】 婚禮邀請函</title>
+<meta name="description" content="誠摯邀請您參加我們的婚禮">
+
+<!--
+  ============================================================
+  待你填入的內容清單（Ctrl+F 搜尋「【」可以快速找到所有待填欄位）
+  ============================================================
+  1. 新人姓名、雙方家長姓名
+  2. 婚禮日期、時間、地點、地址
+  3. 倒數計時目標時間（script.js 裡的 WEDDING_DATE）
+  4. 我們的故事時間軸內容
+  5. 時間流程表
+  6. 所有圖片版位（目前是灰色虛線框，之後把 <div class="photo-placeholder"> 換成 <img>）
+  7. 背景音樂檔案（目前音樂按鈕沒有接檔案，放到 assets/music.mp3 後在 script.js 開啟）
+  8. 出席回覆表單目前只是前端展示，沒有後端。之後可以接 Google表單 / Formspree / Cloudflare Worker，
+     把 form 的 action 換掉，或用 fetch 送到你自己的 API。
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 進場遮罩：點擊後淡出並開始播放音樂（手機瀏覽器需要使用者互動才能自動播放音樂） -->
+<div id="entry-overlay">
+  <div class="entry-inner">
+    <p class="entry-eng">The Wedding Of</p>
+    <h1 class="entry-names">【新郎姓名】<span class="amp">&</span>【新娘姓名】</h1>
+    <p class="entry-date">【2027 . 01 . 01】</p>
+    <button id="entry-btn" type="button">
+      <span class="ring-icon">💍</span>
+      <span>點擊開啟邀請函</span>
+    </button>
+  </div>
+</div>
+
+<!-- 手機版面容器：桌機瀏覽時置中呈現成手機卡片樣式 -->
+<div class="phone-frame">
+<main id="app">
+
+  <!-- ========== 1. 封面 ========== -->
+  <section id="cover" class="section cover">
+    <div class="photo-placeholder cover-photo" data-label="封面主視覺照片 建議尺寸 750×1334"></div>
+    <div class="cover-overlay">
+      <p class="eyebrow reveal">We Are Getting Married</p>
+      <h1 class="cover-title reveal">
+        <span>【新郎姓名】</span>
+        <span class="cover-amp">&</span>
+        <span>【新娘姓名】</span>
+      </h1>
+      <p class="cover-date reveal">2027 年 01 月 01 日・星期六</p>
+      <div class="scroll-cue reveal" aria-hidden="true">
+        <span></span>向下滑動
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2. 邀請文 ========== -->
+  <section id="invitation" class="section invitation">
+    <p class="section-eyebrow reveal">INVITATION</p>
+    <h2 class="section-title reveal">誠摯邀請</h2>
+    <div class="divider reveal"><span>❦</span></div>
+    <p class="invitation-text reveal">
+      愛，是兩顆心從陌生走向依靠，<br>
+      是往後的日子裡，無論晴雨都想與你並肩同行。
+    </p>
+    <p class="invitation-text reveal">
+      我們即將攜手步入禮堂，許下一生的承諾。<br>
+      這是我們人生中最重要的日子，<br>
+      誠摯邀請您撥冗蒞臨，與我們一同見證這份幸福。
+    </p>
+    <p class="invitation-parents reveal">
+      【新郎父親姓名】・【新郎母親姓名】 之子 【新郎姓名】<br>
+      【新娘父親姓名】・【新娘母親姓名】 之女 【新娘姓名】<br>
+      謹訂於 2027 年 01 月 01 日（星期六）舉行婚禮，敬備喜筵，恭請 光臨
+    </p>
+  </section>
+
+  <!-- ========== 3. 倒數計時 ========== -->
+  <section id="countdown" class="section countdown">
+    <p class="section-eyebrow reveal light">COUNTDOWN</p>
+    <h2 class="section-title reveal light">距離我們的大喜之日</h2>
+    <div class="countdown-grid reveal">
+      <div class="countdown-item">
+        <span class="countdown-num" id="cd-days">00</span>
+        <span class="countdown-label">天</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-num" id="cd-hours">00</span>
+        <span class="countdown-label">時</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-num" id="cd-minutes">00</span>
+        <span class="countdown-label">分</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-num" id="cd-seconds">00</span>
+        <span class="countdown-label">秒</span>
+      </div>
+    </div>
+    <p class="countdown-note reveal light">期待與您相聚的那一刻 ✨</p>
+  </section>
+
+  <!-- ========== 4. 我們的故事 ========== -->
+  <section id="story" class="section story">
+    <p class="section-eyebrow reveal">OUR STORY</p>
+    <h2 class="section-title reveal">我們的故事</h2>
+    <div class="divider reveal"><span>❦</span></div>
+
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="photo-placeholder timeline-photo" data-label="相識照片"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2020 . 03</span>
+          <h3>相識</h3>
+          <p>在一個平凡的日子裡，我們因為朋友的介紹而相遇。<br>那時候還不知道，這將是改變一生的相遇。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="photo-placeholder timeline-photo" data-label="相戀照片"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2020 . 09</span>
+          <h3>相戀</h3>
+          <p>一次次的約會、一次次的陪伴，讓我們確定彼此就是那個對的人。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="photo-placeholder timeline-photo" data-label="旅行照片"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2023 . 07</span>
+          <h3>旅行</h3>
+          <p>一起走過許多城市，看過許多風景，最美的風景始終是身邊的你。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="photo-placeholder timeline-photo" data-label="求婚照片"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2026 . 05</span>
+          <h3>求婚</h3>
+          <p>在最喜歡的地方，說出最重要的那句話：「嫁給我好嗎？」</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="photo-placeholder timeline-photo" data-label="婚紗照片"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">2027 . 01</span>
+          <h3>結婚</h3>
+          <p>從今以後，我們正式成為彼此人生中最重要的家人。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5. 婚禮資訊 ========== -->
+  <section id="details" class="section details">
+    <p class="section-eyebrow reveal">WEDDING DETAILS</p>
+    <h2 class="section-title reveal">婚禮資訊</h2>
+    <div class="divider reveal"><span>❦</span></div>
+
+    <div class="detail-card reveal">
+      <div class="detail-icon">🕰️</div>
+      <div class="detail-text">
+        <h3>婚禮時間</h3>
+        <p>2027 年 01 月 01 日（星期六）<br>下午 16:00 入席</p>
+      </div>
+    </div>
+
+    <div class="detail-card reveal">
+      <div class="detail-icon">📍</div>
+      <div class="detail-text">
+        <h3>婚禮地點</h3>
+        <p>【婚宴會館名稱】 【樓層／廳別】<br>【市／區】【詳細地址】</p>
+        <a class="btn-outline" href="#" target="_blank" rel="noopener">開啟地圖導航 →</a>
+      </div>
+    </div>
+
+    <div class="photo-placeholder map-placeholder reveal" data-label="Google 地圖嵌入位置（可用 iframe 內嵌實際地圖）"></div>
+
+    <div class="detail-card reveal">
+      <div class="detail-icon">📞</div>
+      <div class="detail-text">
+        <h3>聯絡窗口</h3>
+        <p>新郎方｜【姓名】 【電話】<br>新娘方｜【姓名】 【電話】</p>
+      </div>
+    </div>
+
+    <a class="btn-solid reveal" id="add-calendar" href="#">📅 加入我的行事曆</a>
+  </section>
+
+  <!-- ========== 6. 時間流程 ========== -->
+  <section id="schedule" class="section schedule">
+    <p class="section-eyebrow reveal light">SCHEDULE</p>
+    <h2 class="section-title reveal light">婚宴流程</h2>
+    <ul class="schedule-list">
+      <li class="reveal"><span class="time">16:00</span><span class="event">賓客報到 ・ 簽名祝福</span></li>
+      <li class="reveal"><span class="time">16:30</span><span class="event">證婚儀式</span></li>
+      <li class="reveal"><span class="time">17:00</span><span class="event">新人進場 ・ 拍照留念</span></li>
+      <li class="reveal"><span class="time">18:00</span><span class="event">喜宴開席</span></li>
+      <li class="reveal"><span class="time">19:00</span><span class="event">敬酒時間</span></li>
+      <li class="reveal"><span class="time">20:00</span><span class="event">送客 ・ 賓客賦歸</span></li>
+    </ul>
+  </section>
+
+  <!-- ========== 7. 相簿 ========== -->
+  <section id="gallery" class="section gallery">
+    <p class="section-eyebrow reveal">GALLERY</p>
+    <h2 class="section-title reveal">幸福時光</h2>
+    <div class="divider reveal"><span>❦</span></div>
+    <div class="gallery-grid">
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 01"></div>
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 02"></div>
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 03"></div>
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 04"></div>
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 05"></div>
+      <div class="photo-placeholder gallery-photo reveal" data-label="照片 06"></div>
+    </div>
+  </section>
+
+  <!-- ========== 8. 出席回覆 ========== -->
+  <section id="rsvp" class="section rsvp">
+    <p class="section-eyebrow reveal">RSVP</p>
+    <h2 class="section-title reveal">出席回覆</h2>
+    <div class="divider reveal"><span>❦</span></div>
+    <p class="rsvp-note reveal">為了讓喜宴籌備更加順利，敬請於 2026 年 12 月 15 日 前回覆您的出席意願，謝謝您 🙏</p>
+
+    <!--
+      表單目前僅為前端展示（送出後只會顯示感謝訊息，不會真的送出資料）。
+      正式上線前請把下面 action 換成你的表單服務網址，或改用 fetch 呼叫自己的 API。
+      常見免費方案：Google 表單（改連結分享）、Formspree、Cloudflare Worker + KV/D1。
+    -->
+    <form id="rsvp-form" class="rsvp-form reveal" action="#" method="POST">
+      <label>
+        姓名
+        <input type="text" name="name" placeholder="請輸入您的姓名" required>
+      </label>
+
+      <label>
+        您是
+        <select name="side">
+          <option value="groom">新郎方親友</option>
+          <option value="bride">新娘方親友</option>
+        </select>
+      </label>
+
+      <fieldset class="attend-fieldset">
+        <legend>是否出席</legend>
+        <label class="radio-label">
+          <input type="radio" name="attend" value="yes" checked> 準時出席 🎉
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="attend" value="no"> 無法出席 😢
+        </label>
+      </fieldset>
+
+      <label>
+        出席人數
+        <input type="number" name="guests" min="1" max="10" value="1">
+      </label>
+
+      <label>
+        飲食需求
+        <select name="diet">
+          <option value="normal">一般葷食</option>
+          <option value="vegetarian">素食</option>
+        </select>
+      </label>
+
+      <label>
+        給新人的祝福話語
+        <textarea name="message" rows="4" placeholder="留下您的祝福吧！"></textarea>
+      </label>
+
+      <button type="submit" class="btn-solid rsvp-submit">送出回覆</button>
+    </form>
+
+    <div id="rsvp-thanks" class="rsvp-thanks" hidden>
+      <p>💌 感謝您的回覆！</p>
+      <p>我們已經收到您的祝福，期待與您相聚的那一天。</p>
+    </div>
+  </section>
+
+  <!-- ========== 9. 頁尾 ========== -->
+  <footer class="footer">
+    <p class="footer-names">【新郎姓名】<span class="amp">&</span>【新娘姓名】</p>
+    <p class="footer-thanks">感謝您撥冗閱讀這份邀請函<br>我們的幸福，因為有您的祝福而更加圓滿</p>
+    <p class="footer-date">2027 . 01 . 01</p>
+  </footer>
+
+</main>
+</div><!-- /.phone-frame -->
+
+<!-- 背景音樂控制按鈕（尚未接音檔，加檔案後參考 script.js 內註解啟用） -->
+<button id="music-toggle" type="button" aria-label="播放／暫停背景音樂">
+  <span class="music-icon">🎵</span>
+</button>
+<audio id="bg-music" loop preload="none">
+  <!-- <source src="assets/music.mp3" type="audio/mpeg"> -->
+</audio>
+
+<script src="js/script.js"></script>
+</body>
+</html>
