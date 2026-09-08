@@ -242,16 +242,8 @@
         <input type="text" name="name" placeholder="請輸入您的姓名" required>
       </label>
 
-      <label>
-        您是
-        <select name="side">
-          <option value="groom">新郎方親友</option>
-          <option value="bride">新娘方親友</option>
-        </select>
-      </label>
-
       <fieldset class="attend-fieldset">
-        <legend>是否出席</legend>
+        <legend>是否參加</legend>
         <label class="radio-label">
           <input type="radio" name="attend" value="yes" checked> 準時出席 🎉
         </label>
@@ -259,24 +251,6 @@
           <input type="radio" name="attend" value="no"> 無法出席 😢
         </label>
       </fieldset>
-
-      <label>
-        出席人數
-        <input type="number" name="guests" min="1" max="10" value="1">
-      </label>
-
-      <label>
-        飲食需求
-        <select name="diet">
-          <option value="normal">一般葷食</option>
-          <option value="vegetarian">素食</option>
-        </select>
-      </label>
-
-      <label>
-        給新人的祝福話語
-        <textarea name="message" rows="4" placeholder="留下您的祝福吧！"></textarea>
-      </label>
 
       <button type="submit" class="btn-solid rsvp-submit">送出回覆</button>
     </form>

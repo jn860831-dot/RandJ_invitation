@@ -101,29 +101,17 @@ if (addCalendarBtn) {
 }
 
 // ---------- 出席回覆表單：串接 Google 表單 ----------
-// 設定步驟：
-// 1. 到 Google 表單建一份新表單，欄位對應下面 RSVP_FIELD_MAP 的 6 個項目（型態不拘，反正都當文字收）：
-//    姓名 / 您是新郎方還是新娘方親友 / 是否出席 / 出席人數 / 飲食需求 / 給新人的祝福話語
-// 2. 表單編輯畫面右上角「⋮」→「取得預先填入的連結」，每一格隨便填一個測試值，按「取得連結」
-// 3. 打開產生的連結，網址列會出現一串 entry.123456789=測試值，把每個 entry.123456789
-//    對應填進下面 RSVP_FIELD_MAP（用網址裡出現的順序或旁邊的問題文字對照）
-// 4. 把「表單」本身的網址結尾 /viewform 換成 /formResponse，貼到 GOOGLE_FORM_ACTION
-// 5. 存檔重新整理頁面測試送出一筆，去 Google 表單「回覆」分頁（或連結的試算表）確認有收到資料
-const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/【你的表單ID】/formResponse';
+// 已對應到目前的 Google 表單（forms.gle/uKH17kAHYR9hqPQi9，姓名／是否參加 2 題）。
+// 之後若在 Google 表單改了題目或新增欄位，記得同步更新下面的 entry ID 對照。
+const GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLScT6mbp99DIvKx7zVq1uTj154-c5LBlfP1KTl7icwi0ndaDXQ/formResponse';
 const RSVP_FIELD_MAP = {
-  name: 'entry.XXXXXXXXX',    // 姓名
-  side: 'entry.XXXXXXXXX',    // 新郎方／新娘方
-  attend: 'entry.XXXXXXXXX',  // 是否出席
-  guests: 'entry.XXXXXXXXX',  // 出席人數
-  diet: 'entry.XXXXXXXXX',    // 飲食需求
-  message: 'entry.XXXXXXXXX', // 祝福留言
+  name: 'entry.1578248924',   // 姓名
+  attend: 'entry.1728751231', // 是否參加
 };
 
-// 把選項的英文代碼換成中文文字，讓 Google 試算表裡的內容一看就懂
+// 把選項的英文代碼換成中文文字，需與 Google 表單裡的選項文字完全一致
 const RSVP_VALUE_LABELS = {
-  side: { groom: '新郎方親友', bride: '新娘方親友' },
-  attend: { yes: '準時出席', no: '無法出席' },
-  diet: { normal: '一般葷食', vegetarian: '素食' },
+  attend: { yes: '是', no: '否' },
 };
 
 const rsvpForm = document.getElementById('rsvp-form');
