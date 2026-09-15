@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/script.js" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=20260915-2">
+  <script src="js/script.js?v=20260915-1" defer></script>
 </head>
 <body>
   <header class="site-header" aria-label="主要導覽">
@@ -25,7 +25,9 @@
   <main id="top">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-grain" aria-hidden="true"></div>
-      <div class="hero-stamp" aria-hidden="true"><span>🐈</span> ginger love</div>
+      <div class="hero-art" aria-hidden="true">
+        <img src="assets/cover-illustration-transparent.png" alt="">
+      </div>
       <div class="hero-content">
         <p class="kicker">WE ARE GETTING MARRIED</p>
         <h1 id="hero-title"><span>Ray</span><i>&amp;</i><span>Jenny</span></h1>
@@ -34,7 +36,6 @@
         </div>
         <a class="hero-link" href="#verse">一起往下看 <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="hero-arch" aria-hidden="true"><span class="arch-line one"></span><span class="arch-line two"></span><span class="arch-line three"></span></div>
     </section>
 
     <section class="verse section-pad" id="verse" aria-labelledby="verse-title">
@@ -48,16 +49,21 @@
     </section>
 
     <section class="illustration section-pad" aria-labelledby="illustration-title">
-      <div class="section-heading reveal"><p>HAND DRAWN MEMORIES</p><h2 id="illustration-title">屬於我們的手繪故事</h2></div>
+      <div class="section-heading reveal"><p>ＵＳ</p><h2 id="illustration-title">Jenny and Ray</h2></div>
       <div class="image-slot large reveal" role="img" aria-label="手繪主視覺圖片預留位置">
-        <span class="slot-icon" aria-hidden="true">✎</span><strong>手繪圖片區</strong><small>建議放入橫式插畫或兩人的手繪合照</small>
+        <span class="slot-icon" aria-hidden="true">✎</span><strong>我們家的手繪日常</strong><small>我、你，還有阿東，拼成最喜歡的生活</small>
       </div>
     </section>
 
-    <section class="countdown section-pad" aria-labelledby="countdown-title">
-      <div class="animal-row reveal" aria-label="卡比獸、樹懶、老虎與橘貓圖案"><span title="卡比獸">💤</span><span title="樹懶">🦥</span><span title="老虎">🐯</span><span title="橘貓">🐈</span></div>
-      <p class="section-label warm">COUNTING DOWN TO</p>
-      <h2 id="countdown-title">我們的大日子</h2>
+    <section class="countdown section-pad" id="countdown" aria-labelledby="countdown-title">
+      <div class="animal-row reveal" aria-label="卡比獸、樹懶、老虎與橘貓圖案">
+        <img src="assets/countdown-snorlax.png" alt="卡比獸" width="64" height="64">
+        <img src="assets/countdown-sloth.png" alt="樹懶" width="64" height="64">
+        <img src="assets/countdown-tiger.png" alt="老虎" width="64" height="64">
+        <img src="assets/countdown-cat.png" alt="橘貓" width="64" height="64">
+      </div>
+      <p class="section-label warm">COUNT DOWN TO</p>
+      <h2 id="countdown-title">OUR BIG DAY</h2>
       <div class="countdown-grid reveal" aria-live="polite">
         <div><strong id="cd-days">000</strong><span>DAYS</span></div><div><strong id="cd-hours">00</strong><span>HOURS</span></div><div><strong id="cd-minutes">00</strong><span>MINUTES</span></div><div><strong id="cd-seconds">00</strong><span>SECONDS</span></div>
       </div>
@@ -65,12 +71,12 @@
     </section>
 
     <section class="story section-pad" id="story" aria-labelledby="story-title">
-      <div class="section-heading reveal"><p>OUR STORY</p><h2 id="story-title">一路走來，剛好是你</h2></div>
+      <div class="section-heading reveal"><p>OUR STORY</p><h2 id="story-title">相遇 相識 向前行</h2></div>
       <div class="story-timeline">
-        <article class="story-item reveal"><div class="story-photo image-slot" role="img" aria-label="圖1"><span aria-hidden="true">💤</span><small>放入卡比獸圖片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 01</span><h3>你好你好</h3><p>組團打碩論boss的隊友。</p></div></article>
-        <article class="story-item reverse reveal"><div class="story-photo image-slot" role="img" aria-label="初入社會，樹懶圖片預留位置"><span aria-hidden="true">🦥</span><small>放入樹懶圖片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 02</span><h3>面試成功</h3><p>菜就是要多練!</p></div></article>
-        <article class="story-item reveal"><div class="story-photo image-slot" role="img" aria-label="一起出國，通往身心健康的療育之途"><span aria-hidden="true">🐯</span><small>放入老虎圖片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 03</span><h3>出國夠夠</h3><p>通往身心健康的療育之途。</p></div></article>
-        <article class="story-item reverse reveal"><div class="story-photo image-slot" role="img" aria-label="Yes I do，迎接東海回家 驚喜的沖繩求婚"><span aria-hidden="true">🐈</span><small>放入貓貓阿東的圖片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 04</span><h3>嗨阿喵<br>Yes I do</h3><p>迎接東海回家 驚喜的沖繩求婚</p></div></article>
+        <article class="story-item reveal"><div class="story-photo"><img src="assets/story-hello.png" alt="兩人在實驗室相遇的手繪圖"></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 01</span><h3>你好你好</h3><p>組團打碩論boss的前後輩。</p></div></article>
+        <article class="story-item reverse reveal"><div class="story-photo contain"><img src="assets/story-together.jpeg" alt="兩人一路旅行與運動的手繪圖"></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 02</span><h3>兩人四腳</h3><p>從這裡走到那裡，一起菜、一起練。</p></div></article>
+        <article class="story-item reveal"><div class="story-photo image-slot" role="img" aria-label="阿東加入我們的家"><span aria-hidden="true">🐈</span><small>放入阿東的照片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 03</span><h3>嗨！阿東</h3><p>喵喵喵喵，跟我回家。</p></div></article>
+        <article class="story-item reverse reveal"><div class="story-photo image-slot" role="img" aria-label="沖繩求婚，Yes I do"><span aria-hidden="true">💍</span><small>放入沖繩求婚的照片</small></div><div class="paw-marker" aria-hidden="true">🐾</div><div class="story-copy"><span>CHAPTER 04</span><h3>Yes I do</h3><p>驚不驚喜，意不意外，偷跑來沖繩啦！</p></div></article>
       </div>
     </section>
 
@@ -90,14 +96,15 @@
     </section>
 
     <section class="rsvp section-pad" id="rsvp" aria-labelledby="rsvp-title">
-      <div class="rsvp-intro reveal"><p>WILL YOU JOIN US?</p><h2 id="rsvp-title">RSVP 出席回覆</h2><span aria-hidden="true">🐈</span><p>很期待在這一天見到你，請留下出席資訊，讓我們為你保留位置。</p></div>
+      <div class="rsvp-intro reveal"><p>WILL YOU JOIN US?</p><h2 id="rsvp-title">RSVP 出席回覆</h2><span aria-hidden="true">🐈</span><p>一路上有你／妳的相伴，是我們重要的回憶。誠摯邀請你來一同吃頓飯～</p></div>
       <form id="rsvp-form" class="rsvp-form reveal">
-        <div class="field-row"><label>您的姓名 <em>*</em><input name="name" type="text" autocomplete="name" required placeholder="請輸入您的姓名"></label><label>聯絡電話 <em>*</em><input name="phone" type="tel" autocomplete="tel" required placeholder="0912-345-678"></label></div>
-        <label>電子信箱 <em>*</em><input name="email" type="email" autocomplete="email" required placeholder="example@email.com"></label>
-        <label>您是怎麼認識新人的？ <em>*</em><select name="relationship" required><option value="" selected disabled>請選擇</option><option>新郎大學同學</option><option>新娘同事</option><option>教會小組</option><option>共同朋友</option><option>家人親友</option></select></label>
+        <div class="field-row"><label>您的姓名 <em>*</em><input name="name" type="text" autocomplete="name" required placeholder="李東海"></label><label>聯絡電話 <em>*</em><input name="phone" type="tel" autocomplete="tel" required placeholder="0912-345-678"></label></div>
+        <label>電子信箱 <em>*</em><input name="email" type="email" autocomplete="email" required placeholder="donghiLee@email.com"></label>
+        <label>您是怎麼認識新人的？ <em>*</em><select id="relationship" name="relationship" required><option value="" selected disabled>請選擇</option><option>新郎的家人／親友</option><option>新娘的家人／親友</option><option>大學同學</option><option>研究所同學</option><option>教會朋友</option><option>高中同學</option><option value="other">其他</option></select></label>
+        <label id="other-relationship-field" hidden>請簡單告訴我們怎麼認識的 <em>*</em><input id="other-relationship" name="otherRelationship" type="text" placeholder="在躲貓貓喵喵叫認識的"></label>
         <fieldset><legend>預計出席場次 <em>*</em></legend><label class="choice"><input type="radio" name="attendance" value="both" required><span>⛪🍽️ 觀禮跟午宴我都到</span></label><label class="choice"><input type="radio" name="attendance" value="ceremony"><span>⛪ 只觀禮不吃飯</span></label><label class="choice"><input type="radio" name="attendance" value="banquet"><span>🍽️ 只參加午宴</span></label><label class="choice"><input type="radio" name="attendance" value="no"><span>💌 不克參加，獻上我的祝福～～</span></label></fieldset>
-        <div class="field-row"><label>出席人數 <em>*</em><select id="guest-count" name="guests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上</option><option value="0">無法出席</option></select></label><label>飲食習慣 <em>*</em><select name="diet" required><option value="" selected disabled>請選擇</option><option>葷食</option><option>蛋奶素</option><option>全素</option><option>鍋邊素</option></select></label></div>
-        <label>想說的話<textarea name="message" rows="4" placeholder="留下想對 Ray & Jenny 說的悄悄話與祝福…"></textarea></label>
+        <div class="field-row"><label>出席人數 <em>*</em><select id="guest-count" name="guests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上</option><option value="0">我的祝福會到</option></select></label><label>飲食習慣 <em>*</em><select name="diet" required><option value="" selected disabled>請選擇</option><option>葷食</option><option>素食</option></select></label></div>
+        <label>想說的話<textarea name="message" rows="4" placeholder="爸爸媽媽我還要吃好多好多零食"></textarea></label>
         <button type="submit">送出出席回覆 <span aria-hidden="true">↗</span></button><p class="form-note">標示 <em>*</em> 為必填欄位</p>
       </form>
       <div id="rsvp-success" class="rsvp-success" hidden tabindex="-1"><span aria-hidden="true">💌</span><h3>🎉 回覆已成功送出！</h3><p>非常期待在 2027/05/15 與您相聚，謝謝您的祝福！</p></div>
