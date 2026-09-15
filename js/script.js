@@ -24,6 +24,17 @@ document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe
 const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const guestCount = document.getElementById('guest-count');
+const relationship = document.getElementById('relationship');
+const otherRelationshipField = document.getElementById('other-relationship-field');
+const otherRelationship = document.getElementById('other-relationship');
+
+relationship?.addEventListener('change', () => {
+  const isOther = relationship.value === 'other';
+  otherRelationshipField.hidden = !isOther;
+  otherRelationship.required = isOther;
+  if (!isOther) otherRelationship.value = '';
+});
+
 document.querySelectorAll('input[name="attendance"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const cannotAttend = radio.checked && radio.value === 'no';
