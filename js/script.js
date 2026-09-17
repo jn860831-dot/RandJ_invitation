@@ -24,6 +24,8 @@ document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe
 const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const guestCount = document.getElementById('guest-count');
+const blessingOnlyOption = guestCount?.querySelector('option[value="0"]');
+blessingOnlyOption?.remove();
 const relationship = document.getElementById('relationship');
 const otherRelationshipField = document.getElementById('other-relationship-field');
 const otherRelationship = document.getElementById('other-relationship');
@@ -39,8 +41,10 @@ document.querySelectorAll('input[name="attendance"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const cannotAttend = radio.checked && radio.value === 'no';
     if (cannotAttend) {
-      guestCount.value = '1'; guestCount.disabled = true; guestCount.required = false;
+      guestCount.append(blessingOnlyOption);
+      guestCount.value = '0'; guestCount.disabled = true; guestCount.required = false;
     } else if (radio.checked) {
+      blessingOnlyOption.remove();
       guestCount.disabled = false; guestCount.required = true; guestCount.value = '';
     }
   });
