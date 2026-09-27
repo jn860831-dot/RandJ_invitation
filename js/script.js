@@ -24,9 +24,6 @@ document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe
 const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const formStatus = document.getElementById('form-status');
-const guestCount = document.getElementById('guest-count');
-const blessingOnlyOption = guestCount?.querySelector('option[value="0"]');
-blessingOnlyOption?.remove();
 const invitationAddressField = document.getElementById('invitation-address-field');
 const invitationAddress = document.getElementById('invitation-address');
 
@@ -39,28 +36,14 @@ document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   });
 });
 
-document.querySelectorAll('input[name="attendance"]').forEach((radio) => {
-  radio.addEventListener('change', () => {
-    const cannotAttend = radio.checked && radio.value === 'no';
-    if (cannotAttend) {
-      guestCount.append(blessingOnlyOption);
-      guestCount.value = '0'; guestCount.disabled = true; guestCount.required = false;
-    } else if (radio.checked) {
-      blessingOnlyOption.remove();
-      guestCount.disabled = false; guestCount.required = true; guestCount.value = '';
-    }
-  });
-});
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!rsvpForm.reportValidity()) return;
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
   const formData = new FormData(rsvpForm);
-  const attendanceLabels = {
-    both: '觀禮跟午宴我都到', ceremony: '只觀禮不吃飯',
-    banquet: '只參加午宴', no: '不克參加，獻上我的祝福～～'
-  };
+  const ceremonyLabels = { yes: '會', no: '不會' };
+  const banquetLabels = { yes: '一定到！', no: '不克參加，獻上我的祝福～～' };
   const guestLabels = {
     0: '我的祝福會到', 1: '1 位', 2: '2 位', 3: '3 位',
     4: '4 位', 5: '5 位以上（我會聯絡你！）'
@@ -74,8 +57,10 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.702656616': formData.get('email') || '',
     'entry.1167794548': formData.get('relationship') === 'other' ? '其他' : (formData.get('relationship') || ''),
     'entry.1274159287': formData.get('otherRelationship') || '',
-    'entry.1865481609': attendanceLabels[formData.get('attendance')] || '',
-    'entry.789501486': guestLabels[formData.get('guests')] || '',
+    'entry.1865481609': ceremonyLabels[formData.get('ceremony')] || '',
+    'entry.1321594175': banquetLabels[formData.get('banquet')] || '',
+    'entry.1355534598': guestLabels[formData.get('ceremonyGuests')] || '',
+    'entry.789501486': guestLabels[formData.get('banquetGuests')] || '',
     'entry.1361480921': formData.get('diet') || '',
     'entry.1352188447': invitationLabels[formData.get('paperInvitation')] || '',
     'entry.1105773361': formData.get('invitationAddress') || '',

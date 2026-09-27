@@ -48,13 +48,6 @@
       </div>
     </section>
 
-    <section class="illustration section-pad" aria-labelledby="illustration-title">
-      <div class="section-heading reveal"><p id="illustration-title">our JouRney</p></div>
-      <div class="image-slot large reveal" role="img" aria-label="手繪主視覺圖片預留位置">
-        <span class="slot-icon" aria-hidden="true">✎</span><strong>我們家的手繪日常</strong><small>有你有我有阿東</small>
-      </div>
-    </section>
-
     <section class="countdown section-pad" id="countdown" aria-labelledby="countdown-title">
       <div class="animal-row reveal" aria-label="卡比獸、樹懶、老虎與橘貓圖案">
         <img src="assets/countdown-snorlax.png" alt="卡比獸" width="64" height="64">
@@ -89,23 +82,26 @@
     </section>
 
     <section class="gallery section-pad" id="gallery" aria-labelledby="gallery-title">
-      <div class="gallery-heading reveal"><div class="section-heading align-left"><p>SELECTED MOMENTS</p><h2 id="gallery-title">相片精選</h2></div><p>向右滑，看更多 <span aria-hidden="true">→</span></p></div>
-      <div class="gallery-track" tabindex="0" aria-label="相片精選，可水平捲動">
-        <div class="gallery-photo image-slot" role="img" aria-label="相片一預留位置"><b>01</b><small>PHOTO</small></div><div class="gallery-photo image-slot" role="img" aria-label="相片二預留位置"><b>02</b><small>PHOTO</small></div><div class="gallery-photo image-slot" role="img" aria-label="相片三預留位置"><b>03</b><small>PHOTO</small></div><div class="gallery-photo image-slot" role="img" aria-label="相片四預留位置"><b>04</b><small>PHOTO</small></div><div class="gallery-photo image-slot" role="img" aria-label="相片五預留位置"><b>05</b><small>PHOTO</small></div>
+      <div class="gallery-heading reveal"><div class="section-heading align-left"><p>SELECTED MOMENTS</p><h2 id="gallery-title">相片精選</h2></div></div>
+      <div class="gallery-placeholder reveal" role="status" aria-label="相片精選即將更新">
+        <span>TO BE UPDATED</span><p>婚紗照準備中</p>
       </div>
     </section>
 
     <section class="rsvp section-pad" id="rsvp" aria-labelledby="rsvp-title">
       <div class="rsvp-intro reveal"><p>WILL YOU JOIN US?</p><h2 id="rsvp-title">出席回覆</h2><img class="rsvp-cat" src="assets/cat-rsvp.png" alt="橘貓阿東"><p>一路上有你的相伴</p>是我們重要的回憶!</p>誠摯邀請你來一同吃頓飯!</p></div>
       <form id="rsvp-form" class="rsvp-form reveal">
-        <div class="field-row"><label>您的姓名 <em>*</em><input name="name" type="text" autocomplete="name" required placeholder="李東海"></label><label>聯絡電話 <em>*</em><input name="phone" type="tel" autocomplete="tel" required placeholder="0912-345-678"></label></div>
-        <label>電子信箱 <em>*</em><input name="email" type="email" autocomplete="email" required placeholder="donghiLee@email.com"></label>
-        <label>您是怎麼認識新人的？ <em>*</em><select id="relationship" name="relationship" required><option value="" selected disabled>請選擇</option><option>新郎的家人／親友</option><option>新娘的家人／親友</option><option>大學同學</option><option>研究所同學</option><option>教會朋友</option><option>高中同學</option><option value="other">其他</option></select></label>
-        <label id="other-relationship-field">回憶一下我們的淵源從何而來～？ <em>*</em><input id="other-relationship" name="otherRelationship" type="text" required placeholder="在躲貓貓喵喵叫認識的"></label>
-        <fieldset><legend>預計出席場次 <em>*</em></legend><label class="choice"><input type="radio" name="attendance" value="both" required><span>⛪🍽️ 觀禮跟午宴我都到</span></label><label class="choice"><input type="radio" name="attendance" value="ceremony"><span>⛪ 只觀禮不吃飯</span></label><label class="choice"><input type="radio" name="attendance" value="banquet"><span>🍽️ 只參加午宴</span></label><label class="choice"><input type="radio" name="attendance" value="no"><span>💌 不克參加，獻上我的祝福～～</span></label></fieldset>
-        <div class="field-row"><label>出席人數 <em>*</em><select id="guest-count" name="guests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上（我會聯絡你！）</option><option value="0">我的祝福會到</option></select></label><label>飲食習慣 <em>*</em><select name="diet" required><option value="" selected disabled>請選擇</option><option>葷食</option><option>素食</option></select></label></div>
+        <div class="field-row"><label><span class="field-label">您的姓名 <em>*</em></span><input name="name" type="text" autocomplete="name" required placeholder="李東海"></label><label><span class="field-label">聯絡電話 <em>*</em></span><input name="phone" type="tel" autocomplete="tel" required placeholder="0912-345-678"></label></div>
+        <label><span class="field-label">電子信箱 <em>*</em></span><input name="email" type="email" autocomplete="email" required placeholder="donghiLee@email.com"></label>
+        <label><span class="field-label">您是怎麼認識新人的？ <em>*</em></span><select id="relationship" name="relationship" required><option value="" selected disabled>請選擇</option><option>新郎的家人／親友</option><option>新娘的家人／親友</option><option>大學同學</option><option>研究所同學</option><option>教會朋友</option><option>高中同學</option><option value="other">其他</option></select></label>
+        <label id="other-relationship-field"><span class="field-label">請簡單告訴我們怎麼認識的 <em>*</em></span><input id="other-relationship" name="otherRelationship" type="text" required placeholder="在躲貓貓喵喵叫認識的"></label>
+        <fieldset><legend>請問你會來參加結婚禮拜嗎？ <em>*</em></legend><p class="field-help">結婚禮拜是在台北堂辦理～</p><label class="choice"><input type="radio" name="ceremony" value="yes" required><span>會</span></label><label class="choice"><input type="radio" name="ceremony" value="no"><span>不會</span></label></fieldset>
+        <label><span class="field-label">結婚禮拜出席人數 <em>*</em></span><select name="ceremonyGuests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上（我會聯絡你！）</option><option value="0">我的祝福會到</option></select></label>
+        <fieldset><legend>請問你會來參加午宴嗎？ <em>*</em></legend><label class="choice"><input type="radio" name="banquet" value="yes" required><span>一定到！</span></label><label class="choice"><input type="radio" name="banquet" value="no"><span>不克參加，獻上我的祝福～～</span></label></fieldset>
+        <label><span class="field-label">午宴出席人數 <em>*</em></span><select name="banquetGuests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上（我會聯絡你！）</option><option value="0">我的祝福會到</option></select></label>
+        <label><span class="field-label">飲食習慣 <em>*</em></span><select name="diet" required><option value="" selected disabled>請選擇</option><option>葷食</option><option>素食</option></select></label>
         <fieldset><legend>想要收到紙本喜帖嗎？ <em>*</em></legend><label class="choice"><input type="radio" name="paperInvitation" value="yes" required><span>我要我要！請寄給我</span></label><label class="choice"><input type="radio" name="paperInvitation" value="digital"><span>電子的就好，謝謝～</span></label></fieldset>
-        <label id="invitation-address-field" hidden>喜帖寄送地址<input id="invitation-address" name="invitationAddress" type="text" autocomplete="street-address" placeholder="請填寫完整收件地址"></label>
+        <label id="invitation-address-field" hidden>喜帖寄送地址（選擇紙本喜帖者填寫）<input id="invitation-address" name="invitationAddress" type="text" autocomplete="street-address" placeholder="請填寫完整收件地址"></label>
         <label>想說的話<textarea name="message" rows="4" placeholder="爸爸媽媽我還要吃好多好多零食"></textarea></label>
         <button type="submit">送出出席回覆 <span aria-hidden="true">↗</span></button><p id="form-status" class="form-note" aria-live="polite">標示 <em>*</em> 為必填欄位</p>
       </form>
@@ -113,7 +109,6 @@
     </section>
 
     <section class="closing" aria-labelledby="closing-title">
-      <div class="closing-image image-slot reveal" role="img" aria-label="頁尾照片預留位置"><span aria-hidden="true">♡</span><strong>最後一張，留給最喜歡的合照</strong><small>建議使用寬幅照片</small></div>
       <div class="closing-copy reveal"><p>SEE YOU THERE</p><h2 id="closing-title">Ray <i>&amp;</i> Jenny</h2><span>2027 · 05 · 15</span></div>
     </section>
   </main>
