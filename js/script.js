@@ -39,14 +39,14 @@ rsvpForm?.addEventListener('submit', async (event) => {
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
 
-  // 1. 收集複選的出席場次
+  // 1. 收集複選的出席場次（這部分有寫 name="attendance"，所以可以這樣抓）
   const attendanceNodes = document.querySelectorAll('input[name="attendance"]:checked');
   let attendanceArr = [];
   attendanceNodes.forEach((node) => {
     attendanceArr.push(node.value);
   });
 
-  // 2. 直接透過 ID 抓取 HTML 欄位的值（最穩固，不依賴 name 屬性）
+  // 2. 直接透過 ID 抓取 HTML 欄位的值（完美對應你的 HTML 結構）
   const guestName = document.getElementById('guestName')?.value || '';
   const guestPhone = document.getElementById('guestPhone')?.value || '';
   const guestCount = document.getElementById('guestCount')?.value || '';
@@ -55,12 +55,12 @@ rsvpForm?.addEventListener('submit', async (event) => {
 
   // 3. 對應你的 Google 表單 entry 代碼
   const response = new URLSearchParams({
-    'entry.47567131': guestName,        // 您的姓名
-    'entry.817650951': guestPhone,      // 聯絡電話
+    'entry.47567131': guestName,                 // 您的姓名
+    'entry.817650951': guestPhone,               // 聯絡電話
     'entry.1865481609': attendanceArr.join(', '), // 預計參與場次 (複選)
-    'entry.1355534598': guestCount,     // 出席總人數
-    'entry.1361480921': dietPreference, // 飲食習慣
-    'entry.65394930': blessingNote      // 給新人的祝福話語
+    'entry.1355534598': guestCount,              // 出席總人數
+    'entry.1361480921': dietPreference,          // 飲食習慣
+    'entry.65394930': blessingNote               // 給新人的祝福話語
   });
 
   // 按鈕狀態切換
