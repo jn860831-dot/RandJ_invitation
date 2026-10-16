@@ -27,6 +27,7 @@ const formStatus = document.getElementById('form-status');
 const invitationAddressField = document.getElementById('invitation-address-field');
 const invitationAddress = document.getElementById('invitation-address');
 
+// 處理紙本喜帖地址欄位的顯示與隱藏
 document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const wantsPaperInvitation = radio.checked && radio.value === 'yes';
@@ -36,12 +37,15 @@ document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   });
 });
 
+// 處理「其他」認識關係欄位的顯示與隱藏（若有需要可加，此處先維持基礎表單邏輯）
+
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!rsvpForm.reportValidity()) return;
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
   const formData = new FormData(rsvpForm);
+  
   const ceremonyLabels = { yes: '會', no: '不會' };
   const banquetLabels = { yes: '一定到！', no: '不克參加，獻上我的祝福～～' };
   const guestLabels = {
@@ -51,6 +55,8 @@ rsvpForm?.addEventListener('submit', async (event) => {
   const invitationLabels = {
     yes: '我要我要！請寄給我', digital: '電子的就好，謝謝～'
   };
+
+  // 對應你 Google 表單的 entry 代碼
   const response = new URLSearchParams({
     'entry.47567131': formData.get('name') || '',
     'entry.817650951': formData.get('phone') || '',
