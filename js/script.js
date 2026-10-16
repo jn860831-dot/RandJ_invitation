@@ -28,7 +28,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-// 表單相關 DOM 元素
+// 表單相關 DOM 元素（對應 HTML 的 rsvp-form）
 const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const formStatus = document.getElementById('form-status');
@@ -39,9 +39,9 @@ const invitationAddress = document.getElementById('invitation-address');
 document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const wantsPaperInvitation = radio.checked && radio.value === 'yes';
-    invitationAddressField.hidden = !wantsPaperInvitation;
-    invitationAddress.required = wantsPaperInvitation;
-    if (!wantsPaperInvitation) invitationAddress.value = '';
+    if (invitationAddressField) invitationAddressField.hidden = !wantsPaperInvitation;
+    if (invitationAddress) invitationAddress.required = wantsPaperInvitation;
+    if (!wantsPaperInvitation && invitationAddress) invitationAddress.value = '';
   });
 });
 
@@ -53,11 +53,12 @@ rsvpForm?.addEventListener('submit', async (event) => {
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
   const formData = new FormData(rsvpForm);
 
-  // 對應你 Google 表單的 entry 代碼與文字轉換
-  const ceremonyLabels = { yes: '會我會', no: '應該不會' };
+  // 文字標籤轉換
+  const ceremonyLabels = { yes: '我會我會', no: '應該不會' };
   const banquetLabels = { yes: '一定到！', no: '不克參加，獻上我的祝福～～' };
   const invitationLabels = { yes: '我要我要！請寄給我', digital: '電子的就好，謝謝～' };
 
+  // 對應 Google 表單的 entry 代碼
   const response = new URLSearchParams({
     'entry.47567131': formData.get('name') || '',
     'entry.817650951': formData.get('phone') || '',
@@ -74,8 +75,10 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.65394930': formData.get('message') || ''
   });
 
-  submitButton.disabled = true;
-  submitButton.textContent = '正在送出…';
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = '正在送出…';
+  }
   if (formStatus) formStatus.textContent = '正在傳送您的回覆，請稍候。';
 
   try {
@@ -87,11 +90,15 @@ rsvpForm?.addEventListener('submit', async (event) => {
     
     // 成功後隱藏表單，顯示感謝提示
     rsvpForm.hidden = true;
-    successMessage.hidden = false;
-    successMessage.focus();
+    if (successMessage) {
+      successMessage.hidden = false;
+      successMessage.focus();
+    }
   } catch (error) {
-    submitButton.disabled = false;
-    submitButton.innerHTML = '送出出席回覆 <span aria-hidden="true">↗</span>';
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = '送出出席回覆 <span aria-hidden="true">↗</span>';
+    }
     if (formStatus) formStatus.textContent = '目前無法送出，請確認網路連線後再試一次。';
   }
 });
