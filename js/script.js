@@ -64,6 +64,44 @@ document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   });
 });
 
+// 草稿保留在此瀏覽器；成功與否以 Google 顯示的結果為準。
+const draftKey = 'randj-rsvp-draft-v1';
+function saveDraft() {
+  try {
+    const draft = {};
+    for (const el of rsvpForm.elements) {
+      if (!el.name || (el.type === 'radio' && !el.checked)) continue;
+      draft[el.name] = el.value;
+    }
+    localStorage.setItem(draftKey, JSON.stringify({ savedAt: Date.now(), values: draft }));
+    return true;
+  } catch (_) { return false; }
+}
+try {
+  const draft = JSON.parse(localStorage.getItem(draftKey) || 'null');
+  if (draft && Date.now() - draft.savedAt < 7 * 86400000) {
+    for (const el of rsvpForm.elements) {
+      if (!el.name || !(el.name in draft.values)) continue;
+      if (el.type === 'radio') el.checked = el.value === draft.values[el.name];
+      else el.value = draft.values[el.name];
+    }
+    toggleOtherRelationship();
+    const wantsPaper = rsvpForm.elements.paperInvitation.value === 'yes';
+    invitationAddressField.hidden = !wantsPaper;
+    invitationAddress.required = wantsPaper;
+  }
+} catch (_) {}
+rsvpForm?.addEventListener('input', saveDraft);
+rsvpForm?.addEventListener('change', saveDraft);
+const clearDraft = document.createElement('button');
+clearDraft.type = 'button';
+clearDraft.textContent = '清除本機草稿';
+clearDraft.addEventListener('click', () => {
+  try { localStorage.removeItem(draftKey); } catch (_) {}
+  formStatus.textContent = '本機草稿已清除；畫面內容仍保留。繼續編輯會重新儲存草稿。';
+});
+rsvpForm?.append(clearDraft);
+
 // 4. 表單送出事件處理（傳送到你的 Google 表單）
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -71,6 +109,15 @@ rsvpForm?.addEventListener('submit', async (event) => {
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
   const formData = new FormData(rsvpForm);
+  const saved = saveDraft();
+  const relationshipLabels = {
+    '新郎的家人/親友': '新郎的家人／親友',
+    '新娘的家人/親友': '新娘的家人／親友',
+    '大學同學/朋友': '大學同學',
+    '研究所同學/朋友': '研究所同學',
+    '高中同學/朋友': '高中同學',
+    '教會朋友': '教會朋友', other: '其他'
+  };
 
   // 對齊你 Google 表單裡的選項文字
   const ceremonyLabels = { yes: '會', no: '不會' };
@@ -88,8 +135,8 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.47567131': formData.get('name') || '',
     'entry.817650951': formData.get('phone') || '',
     'entry.702656616': formData.get('email') || '',
-    'entry.1167794548': formData.get('relationship') === 'other' ? '其他' : (formData.get('relationship') || ''),
-    'entry.1274159287': formData.get('otherRelationship') || '',
+    'entry.1167794548': relationshipLabels[formData.get('relationship')] || '',
+    'entry.1274159287': formData.get('otherRelationship') || formData.get('relationship') || '',
     'entry.1865481609': ceremonyLabels[formData.get('ceremony')] || '',
     'entry.1321594175': banquetLabels[formData.get('banquet')] || '',
     'entry.1355534598': guestLabels[formData.get('ceremonyGuests')] || '',
@@ -100,30 +147,25 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.65394930': formData.get('message') || ''
   });
 
-  if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.textContent = '正在送出…';
+  // 原生 POST 讓賓客直接看見 Google 的確認或驗證錯誤頁面。
+  // 跨來源 fetch/no-cors 和 iframe load 都不能證明資料已儲存。
+  const transport = document.createElement('form');
+  transport.method = 'POST';
+  transport.action = 'https://docs.google.com/forms/d/e/1FAIpQLSf2lR-ELavUNSJPtd8Dt1hoCWt8ysJV1hVjBMCwavYgufCkUw/formResponse';
+  transport.target = '_blank';
+  transport.rel = 'noopener';
+  for (const [name, value] of response) {
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = name; input.value = value;
+    transport.append(input);
   }
-  if (formStatus) formStatus.textContent = '正在傳送您的回覆，請稍候。';
-
+  document.body.append(transport);
   try {
-    await fetch('https://docs.google.com/forms/d/e/1FAIpQLSf2lR-ELavUNSJPtd8Dt1hoCWt8ysJV1hVjBMCwavYgufCkUw/formResponse', {
-      method: 'POST', 
-      mode: 'no-cors', 
-      body: response
-    });
-    
-    // 送出成功後隱藏表單，顯示「🎉 回覆已成功送出！」
-    rsvpForm.hidden = true;
-    if (successMessage) {
-      successMessage.hidden = false;
-      successMessage.focus();
-    }
-  } catch (error) {
-    if (submitButton) {
-      submitButton.disabled = false;
-      submitButton.innerHTML = '重新送出出席回覆 <span aria-hidden="true">↗</span>';
-    }
-    if (formStatus) formStatus.textContent = '目前無法送出，請確認網路連線後再試一次。';
-  }
+    transport.submit();
+    formStatus.textContent = '已開啟 Google 表單處理頁；請確認該頁顯示「已收到回覆」才算完成。若未開啟請允許新分頁。'
+      + (saved ? '填寫草稿已保留於此瀏覽器七天，確認成功後可清除。' : '此瀏覽器無法儲存草稿，請保留本頁直到確認成功。')
+      + '若結果不明，請先聯絡新人確認，避免重複送出。';
+  } catch (_) {
+    formStatus.textContent = '未能開啟提交頁，請保留本頁並再試一次。填寫內容未清除。';
+  } finally { transport.remove(); }
 });
