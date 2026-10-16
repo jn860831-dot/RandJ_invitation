@@ -1,8 +1,14 @@
+// 倒數計時器
 const weddingDate = new Date('2027-05-15T09:00:00+08:00').getTime();
 
 function updateCountdown() {
   const remaining = Math.max(0, weddingDate - Date.now());
-  const values = { days: Math.floor(remaining / 86400000), hours: Math.floor((remaining / 3600000) % 24), minutes: Math.floor((remaining / 60000) % 60), seconds: Math.floor((remaining / 1000) % 60) };
+  const values = { 
+    days: Math.floor(remaining / 86400000), 
+    hours: Math.floor((remaining / 3600000) % 24), 
+    minutes: Math.floor((remaining / 60000) % 60), 
+    seconds: Math.floor((remaining / 1000) % 60) 
+  };
   Object.entries(values).forEach(([unit, value]) => {
     const target = document.getElementById(`cd-${unit}`);
     if (target) target.textContent = String(value).padStart(unit === 'days' ? 3 : 2, '0');
@@ -11,6 +17,7 @@ function updateCountdown() {
 updateCountdown();
 window.setInterval(updateCountdown, 1000);
 
+// 捲動顯示動畫
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -21,13 +28,14 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
+// 表單相關 DOM 元素
 const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const formStatus = document.getElementById('form-status');
 const invitationAddressField = document.getElementById('invitation-address-field');
 const invitationAddress = document.getElementById('invitation-address');
 
-// 處理紙本喜帖地址欄位的顯示與隱藏
+// 處理「是否需要紙本喜帖」的地址欄位連動顯示
 document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   radio.addEventListener('change', () => {
     const wantsPaperInvitation = radio.checked && radio.value === 'yes';
@@ -37,26 +45,19 @@ document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
   });
 });
 
-// 處理「其他」認識關係欄位的顯示與隱藏（若有需要可加，此處先維持基礎表單邏輯）
-
+// 表單送出事件處理
 rsvpForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (!rsvpForm.reportValidity()) return;
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
   const formData = new FormData(rsvpForm);
-  
-  const ceremonyLabels = { yes: '會', no: '不會' };
-  const banquetLabels = { yes: '一定到！', no: '不克參加，獻上我的祝福～～' };
-  const guestLabels = {
-    0: '我的祝福會到', 1: '1 位', 2: '2 位', 3: '3 位',
-    4: '4 位', 5: '5 位以上（我會聯絡你！）'
-  };
-  const invitationLabels = {
-    yes: '我要我要！請寄給我', digital: '電子的就好，謝謝～'
-  };
 
-  // 對應你 Google 表單的 entry 代碼
+  // 對應你 Google 表單的 entry 代碼與文字轉換
+  const ceremonyLabels = { yes: '會我會', no: '應該不會' };
+  const banquetLabels = { yes: '一定到！', no: '不克參加，獻上我的祝福～～' };
+  const invitationLabels = { yes: '我要我要！請寄給我', digital: '電子的就好，謝謝～' };
+
   const response = new URLSearchParams({
     'entry.47567131': formData.get('name') || '',
     'entry.817650951': formData.get('phone') || '',
@@ -65,8 +66,8 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.1274159287': formData.get('otherRelationship') || '',
     'entry.1865481609': ceremonyLabels[formData.get('ceremony')] || '',
     'entry.1321594175': banquetLabels[formData.get('banquet')] || '',
-    'entry.1355534598': guestLabels[formData.get('ceremonyGuests')] || '',
-    'entry.789501486': guestLabels[formData.get('banquetGuests')] || '',
+    'entry.1355534598': formData.get('ceremonyGuests') || '',
+    'entry.789501486': formData.get('banquetGuests') || '',
     'entry.1361480921': formData.get('diet') || '',
     'entry.1352188447': invitationLabels[formData.get('paperInvitation')] || '',
     'entry.1105773361': formData.get('invitationAddress') || '',
@@ -75,18 +76,22 @@ rsvpForm?.addEventListener('submit', async (event) => {
 
   submitButton.disabled = true;
   submitButton.textContent = '正在送出…';
-  formStatus.textContent = '正在傳送您的回覆，請稍候。';
+  if (formStatus) formStatus.textContent = '正在傳送您的回覆，請稍候。';
 
   try {
     await fetch('https://docs.google.com/forms/d/e/1FAIpQLSf2lR-ELavUNSJPtd8Dt1hoCWt8ysJV1hVjBMCwavYgufCkUw/formResponse', {
-      method: 'POST', mode: 'no-cors', body: response
+      method: 'POST', 
+      mode: 'no-cors', 
+      body: response
     });
+    
+    // 成功後隱藏表單，顯示感謝提示
     rsvpForm.hidden = true;
     successMessage.hidden = false;
     successMessage.focus();
   } catch (error) {
     submitButton.disabled = false;
-    submitButton.innerHTML = '重新送出出席回覆 <span aria-hidden="true">↗</span>';
-    formStatus.textContent = '目前無法送出，請確認網路連線後再試一次。';
+    submitButton.innerHTML = '送出出席回覆 <span aria-hidden="true">↗</span>';
+    if (formStatus) formStatus.textContent = '目前無法送出，請確認網路連線後再試一次。';
   }
 });
