@@ -65,7 +65,7 @@ document.querySelectorAll('input[name="paperInvitation"]').forEach((radio) => {
 });
 
 // Only acknowledge a confirmed backend save. Configure after Apps Script deployment.
-const RSVP_ENDPOINT = ''; // https://script.google.com/macros/s/DEPLOYMENT_ID/exec
+const RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyMxDPW3fi1mUsa9Gev1yR9u42V5_pPX3uAiLmuq6Kbirwx9cgnQRrayOucH2F6R90h/exec'; // https://script.google.com/macros/s/DEPLOYMENT_ID/exec
 const pendingKey = 'randj-rsvp-pending-v2';
 let sending = false;
 let pendingRequest = null;
