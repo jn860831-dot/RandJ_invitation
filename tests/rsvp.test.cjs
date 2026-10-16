@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const crypto = require('node:crypto');
 const backend = fs.readFileSync('backend/apps-script/Code.gs', 'utf8');
 const choices = {
-  'entry.1167794548':['新郎的家人／親友','新娘的家人／親友','大學同學','研究所同學','高中同學','教會朋友','其他'],
+  'entry.1167794548':['新郎的家人／親友','新娘的家人／親友','大學同學/朋友','研究所同學/朋友','高中同學/朋友','教會朋友','其他'],
   'entry.1865481609':['會','不會'],
   'entry.1321594175':['一定到！','不克參加，獻上我的祝福～～'],
   'entry.1355534598':['我的祝福會到','1 位','2 位','3 位','4 位','5 位以上（我會聯絡你！）'],
@@ -73,7 +73,7 @@ function browserHarness(configured=true) {
   const body=node();
   const window={setInterval(){},addEventListener:(t,fn)=>winListeners[t]=fn,removeEventListener:t=>delete winListeners[t]};
   const ctx=vm.createContext({document:{getElementById:id=>ids[id]||null,querySelectorAll:()=>[],createElement:()=>node(),body},window,IntersectionObserver:class{observe(){}},localStorage:{getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)},FormData:class{constructor(f){this.f=f;}get(k){return this.f.elements.find(e=>e.name===k)?.value;}},URLSearchParams,URL,crypto,location:{origin:'http://localhost:8000'},setTimeout:fn=>{timers.push(fn);return 1;},clearTimeout(){}});
-  vm.runInContext(configured?frontend.replace("const RSVP_ENDPOINT = '';","const RSVP_ENDPOINT = 'https://script.google.com/macros/s/test/exec';"):frontend,ctx);
+  vm.runInContext(frontend.replace(/const RSVP_ENDPOINT = '[^']*';/,configured?"const RSVP_ENDPOINT = 'https://script.google.com/macros/s/test/exec';":"const RSVP_ENDPOINT = '';"),ctx);
   return {form,status,success,button,memory,body,timers,winListeners,async send(){await form.listeners.submit({preventDefault(){}});},reply(data={},origin='https://script.googleusercontent.com'){
     const transport=body.children.findLast(n=>n.method==='POST');
     const vals=Object.fromEntries(transport.children.map(i=>[i.name,i.value]));
@@ -83,6 +83,8 @@ function browserHarness(configured=true) {
 (async()=>{
   let h=browserHarness(false);await h.send();assert.equal(h.body.children.length,0);assert.equal(h.success.hidden,true);
   h=browserHarness();await h.send();
+  const posted=Object.fromEntries(h.body.children[1].children.map(n=>[n.name,n.value]));
+  assert.equal(request(JSON.parse(posted.payload)).ok,true,'actual frontend mapping must pass current Google choice fixture');
   assert.equal(h.success.hidden,true);assert.equal(h.button.disabled,true);
   assert.notEqual(h.body.children[1].target,'_blank','submissions never open a new tab');
   h.reply({ok:true,code:'saved'},'https://evil.example');assert.equal(h.success.hidden,true);
