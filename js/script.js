@@ -28,7 +28,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-// 表單相關 DOM 元素（完美對應你目前 HTML 的 id）
+// 表單相關 DOM 元素
 const rsvpForm = document.getElementById('weddingRsvpForm');
 const successMessage = document.getElementById('successMsg');
 
@@ -38,7 +38,6 @@ rsvpForm?.addEventListener('submit', async (event) => {
   if (!rsvpForm.reportValidity()) return;
 
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
-  const formData = new FormData(rsvpForm);
 
   // 1. 收集複選的出席場次
   const attendanceNodes = document.querySelectorAll('input[name="attendance"]:checked');
@@ -47,14 +46,21 @@ rsvpForm?.addEventListener('submit', async (event) => {
     attendanceArr.push(node.value);
   });
 
-  // 2. 對應你 Google 表單的 entry 代碼 (已精準對應你當前 HTML 的欄位名稱)
+  // 2. 直接透過 ID 抓取 HTML 欄位的值（最穩固，不依賴 name 屬性）
+  const guestName = document.getElementById('guestName')?.value || '';
+  const guestPhone = document.getElementById('guestPhone')?.value || '';
+  const guestCount = document.getElementById('guestCount')?.value || '';
+  const dietPreference = document.getElementById('dietPreference')?.value || '';
+  const blessingNote = document.getElementById('blessingNote')?.value || '';
+
+  // 3. 對應你的 Google 表單 entry 代碼
   const response = new URLSearchParams({
-    'entry.47567131': formData.get('guestName') || '',        // 您的姓名
-    'entry.817650951': formData.get('guestPhone') || '',      // 聯絡電話
-    'entry.1865481609': attendanceArr.join(', ') || '',       // 預計參與場次 (複選)
-    'entry.1355534598': formData.get('guestCount') || '',     // 出席總人數
-    'entry.1361480921': formData.get('dietPreference') || '', // 飲食習慣
-    'entry.65394930': formData.get('blessingNote') || ''      // 給新人的祝福話語
+    'entry.47567131': guestName,        // 您的姓名
+    'entry.817650951': guestPhone,      // 聯絡電話
+    'entry.1865481609': attendanceArr.join(', '), // 預計參與場次 (複選)
+    'entry.1355534598': guestCount,     // 出席總人數
+    'entry.1361480921': dietPreference, // 飲食習慣
+    'entry.65394930': blessingNote      // 給新人的祝福話語
   });
 
   // 按鈕狀態切換
