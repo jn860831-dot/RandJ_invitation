@@ -33,21 +33,7 @@ const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const formStatus = document.getElementById('form-status');
 
-// (A) 處理「您是怎麼認識新人的？」選「其他」時才顯示並設為必填
-const relationshipSelect = document.getElementById('relationship');
-const otherRelationshipField = document.getElementById('other-relationship-field');
-const otherRelationshipInput = document.getElementById('other-relationship');
-
-function toggleOtherRelationship() {
-  if (!relationshipSelect || !otherRelationshipField || !otherRelationshipInput) return;
-  const isOther = relationshipSelect.value === 'other';
-  otherRelationshipField.hidden = !isOther;
-  otherRelationshipInput.required = isOther;
-
-}
-// 網頁剛載入時先執行一次（先把「其他」說明欄藏起來並取消必填，避免卡住表單）
-toggleOtherRelationship();
-relationshipSelect?.addEventListener('change', toggleOtherRelationship);
+// 「怎麼認識的」敘述欄一律顯示並必填，沿用 HTML 設定。
 
 // (B) 處理「紙本喜帖」選「我要我要」時才顯示地址欄並設為必填
 const invitationAddressField = document.getElementById('invitation-address-field');
@@ -101,7 +87,6 @@ try {
       if (el.type === 'radio') el.checked = el.value === draft.values[el.name];
       else el.value = draft.values[el.name];
     }
-    toggleOtherRelationship();
     const wantsPaper = rsvpForm.elements.paperInvitation.value === 'yes';
     invitationAddressField.hidden = !wantsPaper;
     invitationAddress.required = wantsPaper;
@@ -159,7 +144,7 @@ rsvpForm?.addEventListener('submit', async (event) => {
     'entry.817650951': formData.get('phone') || '',
     'entry.702656616': formData.get('email') || '',
     'entry.1167794548': relationshipLabels[formData.get('relationship')] || '',
-    'entry.1274159287': formData.get('relationship') === 'other' ? (formData.get('otherRelationship') || '') : (formData.get('relationship') || ''),
+    'entry.1274159287': formData.get('otherRelationship') || '',
     'entry.1865481609': ceremonyLabels[formData.get('ceremony')] || '',
     'entry.1321594175': banquetLabels[formData.get('banquet')] || '',
     'entry.1355534598': guestLabels[formData.get('ceremonyGuests')] || '',
