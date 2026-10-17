@@ -124,14 +124,6 @@ try {
 
 rsvpForm?.addEventListener('input', saveDraft);
 rsvpForm?.addEventListener('change', saveDraft);
-const clearDraft = document.createElement('button');
-clearDraft.type = 'button';
-clearDraft.textContent = '清除本機草稿';
-clearDraft.addEventListener('click', () => {
-  try { localStorage.removeItem(draftKey); } catch (_) {}
-  formStatus.textContent = '本機草稿已清除；畫面內容仍保留。繼續編輯會重新儲存草稿。';
-});
-rsvpForm?.append(clearDraft);
 
 // 4. 表單送出事件處理（傳送到你的 Google 表單）
 rsvpForm?.addEventListener('submit', async (event) => {
