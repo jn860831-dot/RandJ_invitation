@@ -107,6 +107,21 @@ try {
     invitationAddress.required = wantsPaper;
   }
 } catch (_) {}
+// Keep attendance counts in the existing fields so backend mappings stay unchanged.
+['ceremony', 'banquet'].forEach((eventName) => {
+  const guests = rsvpForm?.elements.namedItem(`${eventName}Guests`);
+  if (!guests) return;
+  const syncGuests = () => {
+    const attendance = rsvpForm.querySelector(`input[name="${eventName}"]:checked`);
+    if (attendance?.value === 'no') guests.value = '0';
+    else if (attendance?.value === 'yes' && guests.value === '0') guests.value = '';
+  };
+  rsvpForm.querySelectorAll(`input[name="${eventName}"]`).forEach((radio) => {
+    radio.addEventListener('change', syncGuests);
+  });
+  syncGuests();
+});
+
 rsvpForm?.addEventListener('input', saveDraft);
 rsvpForm?.addEventListener('change', saveDraft);
 const clearDraft = document.createElement('button');
