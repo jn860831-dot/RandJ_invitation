@@ -83,6 +83,12 @@ a { color: inherit; } button, input, select, textarea { font: inherit; } button,
 .rsvp-success { align-self: center; padding: 60px 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); text-align: center; box-shadow: var(--shadow); } .rsvp-success span { font-size: 3rem; } .rsvp-success h3 { margin: 16px 0 10px; font-size: 1.6rem; } .rsvp-success p { color: #735f55; }
 
 .closing { position: relative; min-height: 460px; padding: 72px 24px; display: grid; place-items: center; background: linear-gradient(145deg, #d8915d, #9d5126); } .closing-copy { color: var(--white); text-align: center; } .closing-copy > p { margin-bottom: 6px; color: var(--milk); } .closing-copy h2 { margin: 0; font-family: var(--display); font-size: clamp(3rem, 8vw, 6rem); font-weight: 500; line-height: .9; } .closing-copy h2 i { color: var(--milk); font-size: .6em; } .closing-copy > span { display: block; margin-top: 14px; font-family: var(--latin-sans); font-weight: 500; letter-spacing: .15em; }
+.closing-line { margin: 28px auto 0; text-align: center; }
+.closing-line-note { margin: 2px 0 0; color: var(--milk); font-family: var(--zh-sans); font-size: .85rem; font-weight: 400; line-height: 1.8; letter-spacing: .06em; }
+.closing-line-link { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; color: var(--white); text-decoration: none; transition: opacity .2s, transform .2s; }
+.closing-line-link svg { display: block; width: 36px; height: 36px; }
+.closing-line-link:hover { opacity: .8; transform: translateY(-2px); }
+.closing-line-link:focus-visible { outline: 2px solid var(--white); outline-offset: 5px; border-radius: 8px; }
 footer { padding: 34px 20px; color: var(--milk); background: var(--cocoa); text-align: center; } footer span { font-size: 1.4rem; } footer blockquote { margin: 12px auto 18px; color: var(--white); font-family: var(--zh-serif); font-size: .92rem; font-weight: 400; line-height: 1.8; letter-spacing: .06em; } footer cite { display: block; color: var(--milk); font-family: var(--zh-sans); font-size: .74rem; font-style: normal; letter-spacing: .08em; } footer p { margin: 8px 0 0; font-family: var(--display); font-size: .9rem; font-style: italic; font-weight: 400; letter-spacing: .04em; }
 
 @media (max-width: 760px) {
