@@ -33,6 +33,22 @@ const rsvpForm = document.getElementById('rsvp-form');
 const successMessage = document.getElementById('rsvp-success');
 const formStatus = document.getElementById('form-status');
 
+// Keep the receipt visible when returning from LINE or refreshing this tab.
+const receiptKey = 'randj-rsvp-receipt-v1';
+function showReceipt() {
+  rsvpForm.hidden = true;
+  successMessage.hidden = false;
+  successMessage.focus({ preventScroll: true });
+  successMessage.scrollIntoView({ behavior: 'instant', block: 'start' });
+}
+try {
+  if (window.sessionStorage?.getItem(receiptKey) === 'saved') {
+    showReceipt();
+    window.addEventListener('pageshow', showReceipt);
+  }
+} catch (_) {}
+
+
 // 「怎麼認識的」敘述欄一律顯示並必填，沿用 HTML 設定。
 
 // (B) 處理「紙本喜帖」選「我要我要」時才顯示地址欄並設為必填
@@ -216,9 +232,8 @@ rsvpForm?.addEventListener('submit', async (event) => {
     if (data.ok === true && data.code === 'saved') {
       clearPending();
       try { localStorage.removeItem(draftKey); } catch (_) {}
-      rsvpForm.hidden = true;
-      successMessage.hidden = false;
-      successMessage.focus();
+      try { window.sessionStorage?.setItem(receiptKey, 'saved'); } catch (_) {}
+      showReceipt();
     } else if (data.code === 'rejected') {
       clearPending();
       formStatus.textContent = '回覆尚未儲存，請檢查填寫內容，或聯絡新人協助確認表單設定。內容已保留。';
@@ -237,3 +252,4 @@ rsvpForm?.addEventListener('submit', async (event) => {
     formStatus.textContent = '暫時無法連接回覆服務，內容已保留，請稍後以相同內容再試。';
   }
 });
+

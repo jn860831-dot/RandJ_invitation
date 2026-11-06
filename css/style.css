@@ -111,3 +111,15 @@ footer { padding: 34px 20px; color: var(--milk); background: var(--cocoa); text-
 .rsvp-form select, .rsvp-form select option, .rsvp-form .choice { font-size: .9rem; }
 
 .event-transport { display: grid; gap: 6px; width: 100%; margin: 20px 0 28px; color: #f3dece; font-family: var(--zh-sans); font-size: .85rem; line-height: 1.75; text-wrap: pretty; }
+
+/* Submission receipt stays below the fixed navigation. */
+.rsvp-success { scroll-margin-top: 100px; overflow-anchor: none; padding: 32px 24px; }
+.rsvp-success > span { font-size: 2.5rem; }
+.rsvp-success p { line-height: 1.7; }
+.receipt-line { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.receipt-line h4 { margin: 0; font-size: 1.2rem; }
+.receipt-line p { margin: 10px 0 16px; font-size: .9rem; }
+.receipt-qr { display: block; width: 184px; max-width: 100%; height: auto; margin: 0 auto 18px; background: white; }
+.receipt-line-button { display: flex; justify-content: center; align-items: center; min-height: 52px; max-width: 300px; margin: auto; border-radius: 999px; background: #087e36; color: white; text-decoration: none; font-weight: 600; }
+.receipt-line a:focus-visible { outline: 3px solid var(--cocoa); outline-offset: 4px; }
+.receipt-line .receipt-line-hint { margin-bottom: 0; font-size: .8rem; }
