@@ -101,7 +101,7 @@ try {
     for (const el of rsvpForm.elements) {
       if (!el.name || !(el.name in draft.values)) continue;
       if (el.type === 'radio') el.checked = el.value === draft.values[el.name];
-      else el.value = draft.values[el.name];
+      else el.value = el.name === 'relationship' && /^新[郎娘]的家人[／/]親友$/.test(draft.values[el.name]) ? '家人/親友' : draft.values[el.name];
     }
     const wantsPaper = rsvpForm.elements.paperInvitation.value === 'yes';
     invitationAddressField.hidden = !wantsPaper;
@@ -135,6 +135,7 @@ rsvpForm?.addEventListener('submit', async (event) => {
   const formData = new FormData(rsvpForm);
   const saved = saveDraft();
   const relationshipLabels = {
+    '家人/親友': '家人/親友',
     '新郎的家人/親友': '新郎的家人／親友',
     '新娘的家人/親友': '新娘的家人／親友',
     '大學同學/朋友': '大學同學/朋友',
@@ -156,6 +157,7 @@ rsvpForm?.addEventListener('submit', async (event) => {
 
   // 打包成 Google 表單對應的 entry 代碼
   const response = new URLSearchParams({
+    'entry.knownPerson': formData.get('knownPerson') || '',
     'entry.47567131': formData.get('name') || '',
     'entry.817650951': formData.get('phone') || '',
     'entry.702656616': formData.get('email') || '',
@@ -252,4 +254,3 @@ rsvpForm?.addEventListener('submit', async (event) => {
     formStatus.textContent = '暫時無法連接回覆服務，內容已保留，請稍後以相同內容再試。';
   }
 });
-

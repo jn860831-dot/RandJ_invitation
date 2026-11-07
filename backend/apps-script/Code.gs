@@ -33,21 +33,26 @@ return rsvpReply_(result,origin);
 const form=FormApp.openById(RSVP_FORM_ID);
 if (!form.isAcceptingResponses()) throw new Error('form closed');
 let response=form.createResponse();
-const knownIds=RSVP_FIELDS.map(function(f){return f[1];});
+const fields=RSVP_FIELDS.slice();
+const person=form.getItems().find(function(item){return item.getTitle()==='您是認識新郎還是新娘呢？';});
+if(values['entry.knownPerson'] && !person) throw new Error('person question missing');
+if(person) fields.push(['entry.knownPerson',person.getId(),'MULTIPLE_CHOICE',false]);
+if (/^新[郎娘]的家人[／/]親友$/.test(values['entry.1167794548'])) values['entry.1167794548']='家人/親友';
+const knownIds=fields.map(function(f){return f[1];});
 form.getItems().forEach(function(item){
 const type=String(item.getType());
 const cast={TEXT:'asTextItem',PARAGRAPH_TEXT:'asParagraphTextItem',MULTIPLE_CHOICE:'asMultipleChoiceItem',LIST:'asListItem',CHECKBOX:'asCheckboxItem',DATE:'asDateItem',DATETIME:'asDateTimeItem',TIME:'asTimeItem',DURATION:'asDurationItem',SCALE:'asScaleItem',GRID:'asGridItem',CHECKBOX_GRID:'asCheckboxGridItem'};
 if (knownIds.indexOf(item.getId())<0 && cast[type] && item[cast[type]]().isRequired()) throw new Error('unmapped required item');
 });
-RSVP_FIELDS.forEach(function(field){
-const value=values[field[0]];
+fields.forEach(function(field){
+const value=values[field[0]] || ''; 
 if (typeof value !== 'string' || value.length>3000 || (field[3] && !value.trim())) throw new Error('invalid field');
 const item=form.getItemById(field[1]);
 if (!item || String(item.getType()) !== field[2]) throw new Error('schema changed');
 const methods={TEXT:'asTextItem',PARAGRAPH_TEXT:'asParagraphTextItem',MULTIPLE_CHOICE:'asMultipleChoiceItem',LIST:'asListItem'};
 const typed=item[methods[field[2]]]();
 if (typed.isRequired() && !value.trim()) throw new Error('required field');
-if (field[2] === 'LIST' || field[2] === 'MULTIPLE_CHOICE') {
+if (value && (field[2] === 'LIST' || field[2] === 'MULTIPLE_CHOICE')) {
 if (typed.getChoices().map(function(c){return c.getValue();}).indexOf(value)<0) throw new Error('invalid choice');
 }
 if (value) response.withItemResponse(typed.createResponse(value));
@@ -67,4 +72,25 @@ return rsvpReply_(result,origin);
 function rsvpReply_(result,origin) {
 const data=JSON.stringify(result).replace(/</g,String.fromCharCode(92)+'u003c');
 return HtmlService.createHtmlOutput('<!doctype html><script>window.top.postMessage('+data+','+JSON.stringify(origin)+');</script>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+
+// Run once before deploying the new website. Historical responses stay untouched.
+function upgradeRelationshipQuestions() {
+  const form=FormApp.openById(RSVP_FORM_ID);
+  const props=PropertiesService.getScriptProperties();
+  const before=form.getResponses();
+  before.forEach(function(response){
+    const key='relationship-backup:'+response.getId();
+    if(!props.getProperty(key)) props.setProperty(key,JSON.stringify({id:response.getId(),timestamp:response.getTimestamp().toISOString(),answers:response.getItemResponses().map(function(answer){return {id:answer.getItem().getId(),title:answer.getItem().getTitle(),value:answer.getResponse()};})}));
+  });
+  const relationship=form.getItemById(667159756).asMultipleChoiceItem();
+  let person=form.getItems().find(function(item){return item.getTitle()==='您是認識新郎還是新娘呢？';});
+  if(!person) person=form.addMultipleChoiceItem().setTitle('您是認識新郎還是新娘呢？');
+  (person.setChoiceValues ? person : person.asMultipleChoiceItem()).setChoiceValues(['帥氣新郎','滿分新娘','兩個人我都認識嘻嘻']).setRequired(false);
+  form.moveItem(person.getIndex(),relationship.getIndex());
+  relationship.setTitle('您是怎麼認識新人的呢？').setChoiceValues(['家人/親友','大學同學/朋友','研究所同學/朋友','教會朋友','高中同學/朋友','其他']);
+  const after=form.getResponses();
+  if(after.length < before.length) throw new Error('Historical response count changed');
+  console.log('Relationship upgrade complete. Historical responses preserved: '+before.length+'; current responses: '+after.length+'; linked spreadsheet: '+form.getDestinationId());
 }

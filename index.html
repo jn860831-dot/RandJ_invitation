@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20261106-receipt">
-  <script src="js/script.js?v=20261106-receipt" defer></script>
+  <script src="js/script.js?v=20261107-relationship" defer></script>
 </head>
 <body>
   <header class="site-header" aria-label="主要導覽">
@@ -112,7 +112,8 @@
       <form id="rsvp-form" class="rsvp-form reveal">
         <div class="field-row"><label><span class="field-label">您的姓名 <em>*</em></span><input name="name" type="text" autocomplete="name" required placeholder="李東海"></label><label><span class="field-label">聯絡電話 <em>*</em></span><input name="phone" type="tel" autocomplete="tel" required placeholder="0912-345-678"></label></div>
         <label><span class="field-label">電子信箱 <em>*</em></span><input name="email" type="email" autocomplete="email" required placeholder="donghiLee@email.com"></label>
-        <label><span class="field-label">您是怎麼認識新人的？ <em>*</em></span><select id="relationship" name="relationship" required><option value="" selected disabled>請選擇</option><option>新郎的家人/親友</option><option>新娘的家人/親友</option><option>大學同學/朋友</option><option>研究所同學/朋友</option><option>高中同學/朋友</option><option>教會朋友</option><option value="other">其他</option></select></label>
+        <fieldset><legend>您是認識新郎還是新娘呢？ <em>*</em></legend><label class="choice"><input type="radio" name="knownPerson" value="帥氣新郎" required><span>帥氣新郎</span></label><label class="choice"><input type="radio" name="knownPerson" value="滿分新娘"><span>滿分新娘</span></label><label class="choice"><input type="radio" name="knownPerson" value="兩個人我都認識嘻嘻"><span>兩個人我都認識嘻嘻</span></label></fieldset>
+        <label><span class="field-label">您是怎麼認識新人的呢？ <em>*</em></span><select id="relationship" name="relationship" required><option value="" selected disabled>請選擇</option><option>家人/親友</option><option>大學同學/朋友</option><option>研究所同學/朋友</option><option>高中同學/朋友</option><option>教會朋友</option><option value="other">其他</option></select></label>
         <label id="other-relationship-field"><span class="field-label">請簡單告訴我們怎麼認識的 <em>*</em></span><input id="other-relationship" name="otherRelationship" type="text" required placeholder="在躲貓貓喵喵叫認識的"></label>
         <fieldset><legend>請問你會來參加結婚禮拜嗎？ <em>*</em></legend><p class="field-help">結婚禮拜是在台北堂辦理～</p><label class="choice"><input type="radio" name="ceremony" value="yes" required><span>我會我會</span></label><label class="choice"><input type="radio" name="ceremony" value="no"><span>應該不會</span></label></fieldset>
         <label><span class="field-label">結婚禮拜出席人數 <em>*</em></span><select name="ceremonyGuests" required><option value="" selected disabled>請選擇</option><option value="1">1 位</option><option value="2">2 位</option><option value="3">3 位</option><option value="4">4 位</option><option value="5">5 位以上（我會聯絡你！）</option><option value="0">我的祝福會到～～</option></select></label>
@@ -150,4 +151,3 @@
   <footer><span aria-hidden="true">🐾</span><blockquote>「我們愛，因為神先愛我們。」<cite>— 約翰一書 4:19</cite></blockquote></footer>
 </body>
 </html>
-

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const crypto = require('node:crypto');
 const backend = fs.readFileSync('backend/apps-script/Code.gs', 'utf8');
 const choices = {
-  'entry.1167794548':['新郎的家人／親友','新娘的家人／親友','大學同學/朋友','研究所同學/朋友','高中同學/朋友','教會朋友','其他'],
+  'entry.1167794548':['家人/親友','大學同學/朋友','研究所同學/朋友','高中同學/朋友','教會朋友','其他'],
   'entry.1865481609':['會','不會'],
   'entry.1321594175':['一定到！','不克參加，獻上我的祝福～～'],
   'entry.1355534598':['我的祝福會到','1 位','2 位','3 位','4 位','5 位以上（我會聯絡你！）'],
@@ -25,8 +25,10 @@ vm.runInContext(backend,context);
 const fields = vm.runInContext('RSVP_FIELDS', context);
 const items = fields.map(([entry,id,type,required])=>{
   const typed = {isRequired:()=>required,getChoices:()=>choices[entry].map(v=>({getValue:()=>v})),createResponse:value=>({entry,value})};
-  return {getId:()=>id,getType:()=>type,asTextItem:()=>typed,asParagraphTextItem:()=>typed,asMultipleChoiceItem:()=>typed,asListItem:()=>typed};
+  return {getTitle:()=>'',getId:()=>id,getType:()=>type,asTextItem:()=>typed,asParagraphTextItem:()=>typed,asMultipleChoiceItem:()=>typed,asListItem:()=>typed};
 });
+const personChoices=['帥氣新郎','滿分新娘','兩個人我都認識嘻嘻'];
+items.push({getTitle:()=> '您是認識新郎還是新娘呢？',getId:()=>999,getType:()=> 'MULTIPLE_CHOICE',asMultipleChoiceItem:()=>({isRequired:()=>false,getChoices:()=>personChoices.map(value=>({getValue:()=>value})),createResponse:value=>({entry:'entry.knownPerson',value})})});
 const form = {
   isAcceptingResponses:()=>!closed,getItems:()=>items,getItemById:id=>items.find(i=>i.getId()===id),
   createResponse:()=>({withItemResponse(){return this;},submit(){submissions++;if(failSubmit)throw Error('interrupted');return {getId:()=> 'saved-id'};}}),
@@ -44,7 +46,7 @@ assert.equal(request(values,id).ok,true);
 assert.equal(submissions,1,'same request is acknowledged without another write');
 assert.equal(request({...values,'entry.47567131':'changed'},id).ok,false);
 assert.equal(submissions,1);
-assert.equal(request({...values,'entry.1167794548':'新郎的家人/親友'}).code,'rejected');
+assert.equal(request({...values,'entry.1167794548':'新郎的家人/親友'}).ok,true);
 assert.equal(request({...values,'entry.1274159287':''}).code,'rejected');
 assert.equal(request({...values,'entry.1105773361':''}).code,'rejected');
 closed=true;assert.equal(request().code,'rejected');closed=false;
@@ -58,23 +60,26 @@ assert.equal(submissions,count,'unconfirmed write must not be repeated');
 for(const relation of choices['entry.1167794548']) assert.equal(request({...values,'entry.1167794548':relation}).ok,true);
 console.log('Backend: confirmed save, idempotency, request conflict, invalid choice, required fields, closed form, interrupted confirmation, and all relationships passed.');
 
+for(const person of personChoices) assert.equal(request({...values,'entry.knownPerson':person}).ok,true);
+assert.equal(request({...values,'entry.knownPerson':'invalid'}).ok,false);
 const frontend=fs.readFileSync('js/script.js','utf8');
-function browserHarness(configured=true) {
+function browserHarness(configured=true, receipt=false) {
   const listeners={}, winListeners={}, timers=[];
   const memory=new Map();
-  const node=()=>({value:'',hidden:false,innerHTML:'送出',children:[],addEventListener(type,fn){this.listeners??={};this.listeners[type]=fn;},append(...v){this.children.push(...v);},remove(){this.removed=true;},focus(){this.focused=true;},submit(){this.submitted=true;}});
+  const node=()=>({value:'',hidden:false,innerHTML:'送出',children:[],addEventListener(type,fn){this.listeners??={};this.listeners[type]=fn;},append(...v){this.children.push(...v);},remove(){this.removed=true;},focus(options){this.focused=options;},scrollIntoView(options){this.scrolled=options;},submit(){this.submitted=true;}});
   const form=node(), status=node(), success=node(), button=node();
   success.hidden=true;
-  const fields={name:'RSVP 測試',phone:'0900000000',email:'rsvp-test@example.com',relationship:'大學同學/朋友',otherRelationship:'',ceremony:'yes',banquet:'no',ceremonyGuests:'1',banquetGuests:'0',diet:'葷食',paperInvitation:'digital',invitationAddress:'',message:'test'};
+  const fields={name:'RSVP 測試',phone:'0900000000',email:'rsvp-test@example.com',knownPerson:'兩個人我都認識嘻嘻',relationship:'家人/親友',otherRelationship:'大學同學',ceremony:'yes',banquet:'no',ceremonyGuests:'1',banquetGuests:'0',diet:'葷食',paperInvitation:'digital',invitationAddress:'',message:'test'};
   const controls=Object.entries(fields).map(([name,value])=>({...node(),name,value,type:'text'}));
   controls.paperInvitation=controls.find(c=>c.name==='paperInvitation');
-  form.elements=controls;form.reportValidity=()=>true;form.querySelector=()=>button;
+  controls.namedItem=()=>null;form.elements=controls;form.reportValidity=()=>true;form.querySelector=()=>button;
   const ids={'rsvp-form':form,'form-status':status,'rsvp-success':success,'relationship':controls.find(c=>c.name==='relationship'),'other-relationship-field':node(),'other-relationship':controls.find(c=>c.name==='otherRelationship'),'invitation-address-field':node(),'invitation-address':controls.find(c=>c.name==='invitationAddress')};
   const body=node();
-  const window={setInterval(){},addEventListener:(t,fn)=>winListeners[t]=fn,removeEventListener:t=>delete winListeners[t]};
+  const session=new Map(receipt ? [['randj-rsvp-receipt-v1','saved']] : []);
+  const window={sessionStorage:{getItem:k=>session.get(k),setItem:(k,v)=>session.set(k,v)},setInterval(){},addEventListener:(t,fn)=>winListeners[t]=fn,removeEventListener:t=>delete winListeners[t]};
   const ctx=vm.createContext({document:{getElementById:id=>ids[id]||null,querySelectorAll:()=>[],createElement:()=>node(),body},window,IntersectionObserver:class{observe(){}},localStorage:{getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)},FormData:class{constructor(f){this.f=f;}get(k){return this.f.elements.find(e=>e.name===k)?.value;}},URLSearchParams,URL,crypto,location:{origin:'http://localhost:8000'},setTimeout:fn=>{timers.push(fn);return 1;},clearTimeout(){}});
   vm.runInContext(frontend.replace(/const RSVP_ENDPOINT = '[^']*';/,configured?"const RSVP_ENDPOINT = 'https://script.google.com/macros/s/test/exec';":"const RSVP_ENDPOINT = '';"),ctx);
-  return {form,status,success,button,memory,body,timers,winListeners,async send(){await form.listeners.submit({preventDefault(){}});},reply(data={},origin='https://script.googleusercontent.com'){
+  return {form,status,success,button,memory,body,timers,winListeners,session,async send(){await form.listeners.submit({preventDefault(){}});},reply(data={},origin='https://script.googleusercontent.com'){
     const transport=body.children.findLast(n=>n.method==='POST');
     const vals=Object.fromEntries(transport.children.map(i=>[i.name,i.value]));
     winListeners.message?.({origin,data:{type:'randj-rsvp-result',requestId:vals.requestId,nonce:vals.nonce,...data}});
@@ -90,6 +95,9 @@ function browserHarness(configured=true) {
   h.reply({ok:true,code:'saved'},'https://evil.example');assert.equal(h.success.hidden,true);
   h.reply({ok:true,code:'saved',nonce:'wrong'});assert.equal(h.success.hidden,true);
   h.reply({ok:true,code:'saved'});assert.equal(h.success.hidden,false);assert.equal(h.form.hidden,true);assert.equal(h.memory.has('randj-rsvp-draft-v1'),false);
+  assert.equal(h.success.focused.preventScroll,true);assert.equal(h.success.scrolled.block,'start');
+  assert.equal(h.session.get('randj-rsvp-receipt-v1'),'saved');
+  const restored=browserHarness(true,true);assert.equal(restored.form.hidden,true);assert.equal(restored.success.hidden,false);
   h=browserHarness();await h.send();h.reply({ok:false,code:'rejected'});assert.equal(h.success.hidden,true);assert.equal(h.form.hidden,false);assert.equal(h.memory.has('randj-rsvp-draft-v1'),true);
   h=browserHarness();await h.send();h.timers[0]();assert.equal(h.success.hidden,true);assert.equal(h.button.disabled,false);assert.equal(h.memory.has('randj-rsvp-pending-v2'),true);
   const firstId=JSON.parse(h.memory.get('randj-rsvp-pending-v2')).requestId;await h.send();assert.equal(JSON.parse(h.memory.get('randj-rsvp-pending-v2')).requestId,firstId);
